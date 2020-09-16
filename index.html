@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<title>Basic Vue</title>
+</head>
+<body>
+
+	<div id="app">
+		<ol>
+			<li v-if="visibility" v-for="(com,idx) in names">{{com.fname}} {{com.lname}}</li>
+		</ol>
+		<button @click="visibility = !visibility">{{visibility ? 'Hide' : 'Show'}}</button>
+		<br>
+		<h3>First Name</h3>
+		<input v-model="fname">
+		<h3>Last Name</h3>
+		<input v-model="lname">
+		<br>
+		<button @click="input"></button>
+	</div>
+
+	<script>
+
+		var app = new Vue({
+			el : '#app',
+			data : {
+				names :[
+					{fname : 'aa',lname : 'AA'},
+					{fname : 'bb',lname : 'BB'},
+					{fname : 'cc',lname : 'CC'},
+					{fname : 'dd',lname : 'DD'},
+					{fname : 'ee',lname : 'EE'}
+				],
+				visibility : true
+			},
+			methods : {
+				input(){
+					app.names.push({
+						fname : this.fname,
+						lname : this.lname
+					})
+				}
+			}
+		})
+
+	</script>
+
+</body>
+</html>
