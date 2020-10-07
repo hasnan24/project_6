@@ -8,8 +8,9 @@
 
 	<div id="app">
 		<ol>
-			<li v-if="visibility" v-for="(com,idx) in names">{{com.fname}} {{com.lname}}
-				<button v-on:click="deleteEvent(idx)">Delete</button>
+			<li v-if="visibility" v-for="(name,index) in names" :key="name.id">{{name.fname}} {{name.lname}}
+				<button @click="deleteEvent(index)">Delete</button>
+				<button @click="editEvent(name.id)">Edit</button>
 			</li>
 		</ol>
 		<button @click="visibility = !visibility">{{visibility ? 'Hide' : 'Show'}}</button>
@@ -23,16 +24,16 @@
 		<br>
 		<button @click="input">Save</button>
 		<br>
-		<h1>Edit</h1>
-		<br>
-		<h3>No</h3>
-		<input v-model="index">
-		<h3>First Name</h3>
-		<input v-model="editfname">
-		<h3>Last Name</h3>
-		<input v-model="editlname">
-		<br>
-		<button @click="edit">Edit</button>
+		<template v-if="id_edit">
+			<h1>Edit</h1>
+			<br>
+			<h3>First Name</h3>
+			<input v-model="fname">
+			<h3>Last Name</h3>
+			<input v-model="lname">
+			<br>
+			<button @click="edit(id_edit)">Edit</button>
+		</template>
 	</div>
 
 	<script>
@@ -41,23 +42,35 @@
 			el : '#app',
 			data : {
 				names :[
-					{fname : 'aa',lname : 'AA'},
-					{fname : 'bb',lname : 'BB'},
-					{fname : 'cc',lname : 'CC'},
-					{fname : 'dd',lname : 'DD'},
-					{fname : 'ee',lname : 'EE'}
+					{id:1, fname : 'aa',lname : 'AA'},
+					{id:2, fname : 'bb',lname : 'BB'},
+					{id:3, fname : 'cc',lname : 'CC'},
+					{id:4, fname : 'dd',lname : 'DD'},
+					{id:5, fname : 'ee',lname : 'EE'}
 				],
-				visibility : true
+				visibility : true,
+				id_edit : null
 			},
 			methods : {
 				input(){
-					app.names.push({
+					let id = this.names[this.names.length-1].id
+					this.names.push({
+						id : id+1,
 						fname : this.fname,
 						lname : this.lname
 					})
+					this.fname=''
+					this.lname=''
 				},
-				edit(){
-					this.$set(this.names, this.index-1,{fname:this.editfname,lname:this.editlname})		
+				edit(id){
+					let a = this.names.findIndex(x => x.id===id)
+					this.$set(this.names,a,{id,fname:this.fname,lname:this.lname})
+					this.id_edit=null
+					this.fname=''
+					this.lname=''		
+				},
+				editEvent(id){
+					this.id_edit = id
 				},
 				deleteEvent: function(event) {
 				  this.names.splice(event, 1);
